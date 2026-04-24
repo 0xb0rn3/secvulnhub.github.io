@@ -1,0 +1,709 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>SecVulnHub — Ethical Hacking Arsenal</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg:       #05060d;
+  --bg-card:  #0b0d1a;
+  --bg-raise: #111326;
+  --fg:       #e8eaf2;
+  --fg-muted: #8891b4;
+  --fg-dim:   #454c6b;
+  --crim:     #ff2d55;
+  --cyan:     #00e5ff;
+  --lime:     #b4ff39;
+  --border:   rgba(232,234,242,.08);
+  --border-m: rgba(232,234,242,.18);
+  --r:        12px;
+  --r-lg:     20px;
+  --r-pill:   999px;
+}
+
+*, *::before, *::after { margin:0; padding:0; box-sizing:border-box; }
+html { scroll-behavior:smooth; }
+
+body {
+  font-family:'Space Mono',monospace;
+  background:var(--bg);
+  color:var(--fg);
+  overflow-x:hidden;
+}
+
+/* ── BACKGROUND ── */
+body::before {
+  content:'';
+  position:fixed; inset:0; z-index:0; pointer-events:none;
+  background-image:
+    linear-gradient(rgba(0,229,255,.03) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(0,229,255,.03) 1px, transparent 1px);
+  background-size:48px 48px;
+  animation:gridMove 20s linear infinite;
+}
+@keyframes gridMove { to { background-position:48px 48px; } }
+
+body::after {
+  content:'';
+  position:fixed; inset:0; z-index:0; pointer-events:none;
+  background:
+    radial-gradient(ellipse 80% 50% at 20% 0%, rgba(255,45,85,.07) 0%, transparent 60%),
+    radial-gradient(ellipse 60% 40% at 80% 100%, rgba(0,229,255,.06) 0%, transparent 60%);
+}
+
+/* ── NAV ── */
+.nav {
+  position:fixed; top:0; left:0; right:0; z-index:100;
+  background:rgba(5,6,13,.85);
+  backdrop-filter:blur(20px);
+  border-bottom:1px solid var(--border);
+}
+.nav-inner {
+  max-width:1300px; margin:0 auto;
+  padding:.9rem 2rem;
+  display:flex; align-items:center; justify-content:space-between;
+}
+.nav-logo {
+  font-family:'Syne',sans-serif; font-weight:800;
+  font-size:1.1rem; letter-spacing:.06em;
+  color:var(--fg); text-decoration:none;
+  display:flex; align-items:center; gap:.5rem;
+}
+.nav-logo span { color:var(--crim); }
+.nav-links { display:flex; align-items:center; gap:.5rem; }
+.nav-link {
+  font-size:.65rem; font-weight:700; letter-spacing:.12em;
+  text-transform:uppercase; color:var(--fg-muted);
+  text-decoration:none; padding:.45rem .9rem;
+  border-radius:var(--r-pill);
+  border:1px solid var(--border);
+  transition:all .2s;
+}
+.nav-link:hover { color:var(--fg); border-color:var(--border-m); background:var(--bg-raise); }
+.nav-cta {
+  background:var(--crim); color:#fff; border-color:var(--crim);
+  font-size:.65rem; font-weight:700; letter-spacing:.12em;
+  text-transform:uppercase; text-decoration:none; padding:.45rem .9rem;
+  border-radius:var(--r-pill); border:1px solid var(--crim);
+  transition:all .2s;
+}
+.nav-cta:hover { background:transparent; color:var(--crim); }
+
+/* ── HERO ── */
+.hero {
+  position:relative; z-index:10;
+  min-height:100vh; display:flex; flex-direction:column;
+  align-items:center; justify-content:center;
+  text-align:center;
+  padding:8rem 2rem 5rem;
+}
+.hero-badge {
+  display:inline-flex; align-items:center; gap:.5rem;
+  font-size:.6rem; font-weight:700; letter-spacing:.18em;
+  text-transform:uppercase; color:var(--cyan);
+  padding:.35rem 1rem; border-radius:var(--r-pill);
+  border:1px solid rgba(0,229,255,.25);
+  background:rgba(0,229,255,.06);
+  margin-bottom:2rem;
+  animation:fadeUp .8s ease both;
+}
+.hero-badge::before {
+  content:''; width:6px; height:6px; border-radius:50%;
+  background:var(--cyan); animation:pulse 2s infinite;
+}
+@keyframes pulse { 0%,100%{opacity:1;} 50%{opacity:.3;} }
+
+.hero-pre {
+  font-family:'Space Mono',monospace; font-size:.7rem;
+  color:var(--crim); letter-spacing:.2em; text-transform:uppercase;
+  margin-bottom:.8rem;
+  animation:fadeUp .8s ease .1s both;
+}
+.hero-title {
+  font-family:'Syne',sans-serif; font-weight:800;
+  font-size:clamp(2.8rem,9vw,7rem);
+  line-height:.95; letter-spacing:-.02em;
+  color:#fff; margin-bottom:1.2rem;
+  animation:fadeUp .8s ease .2s both;
+}
+.hero-title em { font-style:normal; color:var(--crim); }
+.hero-sub {
+  font-size:clamp(.75rem,1.8vw,.9rem); color:var(--fg-muted);
+  max-width:560px; line-height:1.8;
+  margin:0 auto 2.5rem;
+  animation:fadeUp .8s ease .3s both;
+}
+.hero-actions {
+  display:flex; gap:1rem; flex-wrap:wrap; justify-content:center;
+  animation:fadeUp .8s ease .4s both;
+}
+.btn {
+  display:inline-flex; align-items:center; gap:.55rem;
+  font-family:'Space Mono',monospace; font-size:.68rem; font-weight:700;
+  letter-spacing:.1em; text-transform:uppercase;
+  padding:.75rem 1.8rem; border-radius:var(--r-pill);
+  text-decoration:none; cursor:pointer;
+  border:2px solid; transition:all .22s;
+}
+.btn-primary { background:var(--crim); border-color:var(--crim); color:#fff; }
+.btn-primary:hover { background:transparent; color:var(--crim); transform:translateY(-2px); }
+.btn-secondary { background:transparent; border-color:var(--border-m); color:var(--fg-muted); }
+.btn-secondary:hover { border-color:var(--cyan); color:var(--cyan); transform:translateY(-2px); }
+.btn-discord { background:transparent; border-color:rgba(88,101,242,.5); color:#7289da; }
+.btn-discord:hover { background:rgba(88,101,242,.15); color:#fff; border-color:#5865f2; transform:translateY(-2px); }
+
+.hero-stats {
+  display:flex; gap:3rem; flex-wrap:wrap; justify-content:center;
+  margin-top:4rem;
+  animation:fadeUp .8s ease .5s both;
+}
+.hero-stat { text-align:center; }
+.hero-stat-val {
+  font-family:'Syne',sans-serif; font-weight:800;
+  font-size:2rem; color:#fff; display:block;
+  line-height:1;
+}
+.hero-stat-val.crim { color:var(--crim); }
+.hero-stat-val.cyan { color:var(--cyan); }
+.hero-stat-val.lime { color:var(--lime); }
+.hero-stat-lbl { font-size:.6rem; color:var(--fg-dim); letter-spacing:.15em; text-transform:uppercase; margin-top:.3rem; }
+
+@keyframes fadeUp {
+  from { opacity:0; transform:translateY(24px); }
+  to   { opacity:1; transform:translateY(0); }
+}
+
+/* ── SECTIONS ── */
+section { position:relative; z-index:10; }
+.section-inner { max-width:1300px; margin:0 auto; padding:5rem 2rem; }
+.section-tag {
+  font-size:.6rem; font-weight:700; letter-spacing:.2em; text-transform:uppercase;
+  color:var(--crim); margin-bottom:.6rem;
+}
+.section-title {
+  font-family:'Syne',sans-serif; font-weight:800;
+  font-size:clamp(1.8rem,4vw,3rem); color:#fff;
+  line-height:1.1; letter-spacing:-.02em; margin-bottom:1rem;
+}
+.section-sub {
+  font-size:.8rem; color:var(--fg-muted); line-height:1.8;
+  max-width:520px;
+}
+
+/* ── PHASE STRIP ── */
+.phase-strip {
+  border-top:1px solid var(--border);
+  border-bottom:1px solid var(--border);
+  overflow:hidden;
+}
+.phase-scroll {
+  display:flex; width:max-content;
+  animation:scroll 30s linear infinite;
+}
+.phase-scroll:hover { animation-play-state:paused; }
+.phase-item {
+  display:flex; align-items:center; gap:.8rem;
+  padding:.9rem 2.5rem; white-space:nowrap;
+  border-right:1px solid var(--border);
+  font-size:.65rem; font-weight:700; letter-spacing:.12em; text-transform:uppercase;
+  color:var(--fg-dim);
+}
+.phase-item span { color:var(--cyan); }
+@keyframes scroll { from{transform:translateX(0)} to{transform:translateX(-50%)} }
+
+/* ── PROJECTS ── */
+#projects { padding:0; }
+.projects-header {
+  display:flex; align-items:flex-end; justify-content:space-between;
+  flex-wrap:wrap; gap:1.5rem;
+  margin-bottom:2.5rem;
+}
+.shuffle-btn {
+  display:inline-flex; align-items:center; gap:.55rem;
+  font-family:'Space Mono',monospace; font-size:.65rem; font-weight:700;
+  letter-spacing:.12em; text-transform:uppercase;
+  padding:.6rem 1.4rem; border-radius:var(--r-pill);
+  border:2px solid var(--border-m); color:var(--fg-muted);
+  background:var(--bg-card); cursor:pointer;
+  transition:all .22s; user-select:none;
+}
+.shuffle-btn:hover { border-color:var(--lime); color:var(--lime); }
+.shuffle-btn.spinning .shuffle-icon { animation:spin .4s ease; }
+@keyframes spin { from{transform:rotate(0)} to{transform:rotate(360deg)} }
+.shuffle-icon { display:inline-block; transition:transform .3s; }
+
+.project-grid {
+  display:grid;
+  grid-template-columns:repeat(auto-fill,minmax(300px,1fr));
+  gap:1rem;
+}
+.project-card {
+  background:var(--bg-card);
+  border:1px solid var(--border);
+  border-radius:var(--r-lg);
+  padding:1.5rem;
+  transition:all .25s cubic-bezier(.16,1,.3,1);
+  cursor:default;
+  position:relative; overflow:hidden;
+}
+.project-card::before {
+  content:''; position:absolute; top:0; left:0; right:0; height:2px;
+  background:var(--card-accent, var(--crim));
+  transform:scaleX(0); transform-origin:left;
+  transition:transform .3s;
+}
+.project-card:hover { border-color:var(--border-m); transform:translateY(-3px); box-shadow:0 16px 48px rgba(0,0,0,.4); }
+.project-card:hover::before { transform:scaleX(1); }
+
+.project-card.entering { animation:cardIn .35s cubic-bezier(.16,1,.3,1) both; }
+.project-card.exiting  { animation:cardOut .25s ease both; }
+@keyframes cardIn  { from{opacity:0;transform:translateY(16px) scale(.97)} to{opacity:1;transform:none} }
+@keyframes cardOut { from{opacity:1;transform:none} to{opacity:0;transform:translateY(-8px) scale(.97)} }
+
+.card-cat {
+  font-size:.55rem; font-weight:700; letter-spacing:.15em; text-transform:uppercase;
+  padding:.2rem .6rem; border-radius:var(--r-pill);
+  display:inline-block; margin-bottom:.9rem;
+}
+.cat-recon    { background:rgba(0,229,255,.1); color:var(--cyan); }
+.cat-web      { background:rgba(255,45,85,.1); color:var(--crim); }
+.cat-mobile   { background:rgba(180,255,57,.1); color:var(--lime); }
+.cat-exploit  { background:rgba(255,160,30,.1); color:#ffa01e; }
+.cat-network  { background:rgba(130,100,255,.1); color:#8264ff; }
+.cat-forensic { background:rgba(40,200,120,.1); color:#28c878; }
+.cat-auto     { background:rgba(255,200,0,.1);  color:#ffc800; }
+.cat-misc     { background:rgba(200,200,200,.1); color:#aaa; }
+.cat-active   { background:rgba(255,45,85,.18); color:var(--crim); border:1px solid rgba(255,45,85,.3); }
+
+.card-name {
+  font-family:'Syne',sans-serif; font-weight:700;
+  font-size:1rem; color:#fff; margin-bottom:.4rem; letter-spacing:-.01em;
+}
+.card-desc {
+  font-size:.68rem; color:var(--fg-muted); line-height:1.7;
+}
+.card-status {
+  display:inline-flex; align-items:center; gap:.4rem;
+  font-size:.55rem; font-weight:700; letter-spacing:.12em; text-transform:uppercase;
+  margin-top:1rem;
+}
+.status-ready  { color:var(--lime); }
+.status-dev    { color:#ffa01e; }
+.status-plan   { color:var(--fg-dim); }
+.status-active { color:var(--crim); }
+.status-dot { width:5px; height:5px; border-radius:50%; background:currentColor; }
+.status-active .status-dot { animation:pulse 1.5s infinite; }
+
+/* ── TEAM ── */
+.team-grid {
+  display:grid;
+  grid-template-columns:repeat(auto-fill,minmax(240px,1fr));
+  gap:1rem;
+  margin-top:2.5rem;
+}
+.team-card {
+  background:var(--bg-card);
+  border:1px solid var(--border);
+  border-radius:var(--r-lg);
+  padding:1.5rem;
+  transition:all .22s;
+}
+.team-card:hover { border-color:var(--border-m); transform:translateY(-2px); }
+.team-role {
+  font-size:.58rem; font-weight:700; letter-spacing:.15em; text-transform:uppercase;
+  color:var(--crim); margin-bottom:.7rem;
+}
+.team-title {
+  font-family:'Syne',sans-serif; font-weight:700; font-size:1rem;
+  color:#fff; margin-bottom:.3rem;
+}
+.team-desc { font-size:.68rem; color:var(--fg-muted); line-height:1.7; }
+
+.team-cta-row {
+  display:flex; align-items:center; gap:1rem;
+  flex-wrap:wrap; margin-top:2.5rem;
+}
+
+/* ── FOOTER ── */
+footer {
+  position:relative; z-index:10;
+  border-top:1px solid var(--border);
+  padding:2.5rem 2rem;
+}
+.footer-inner {
+  max-width:1300px; margin:0 auto;
+  display:flex; align-items:center; justify-content:space-between;
+  flex-wrap:wrap; gap:1.5rem;
+}
+.footer-logo {
+  font-family:'Syne',sans-serif; font-weight:800; font-size:.9rem;
+  color:var(--fg-muted);
+}
+.footer-logo span { color:var(--crim); }
+.footer-links {
+  display:flex; gap:1.5rem; flex-wrap:wrap;
+}
+.footer-link {
+  font-size:.62rem; color:var(--fg-dim); text-decoration:none;
+  letter-spacing:.08em; transition:color .2s;
+}
+.footer-link:hover { color:var(--fg); }
+.footer-note { font-size:.6rem; color:var(--fg-dim); }
+
+/* ── UTILITY ── */
+.divider {
+  height:1px; margin:0;
+  background:linear-gradient(90deg,transparent,var(--border-m),transparent);
+}
+
+@media (max-width:640px) {
+  .nav-links .nav-link { display:none; }
+  .hero-stats { gap:2rem; }
+  .projects-header { flex-direction:column; align-items:flex-start; }
+  .team-grid { grid-template-columns:1fr; }
+  .footer-inner { flex-direction:column; gap:1rem; }
+}
+</style>
+</head>
+<body>
+
+<!-- ── NAV ── -->
+<nav class="nav">
+  <div class="nav-inner">
+    <a href="#" class="nav-logo">Sec<span>Vuln</span>Hub</a>
+    <div class="nav-links">
+      <a href="#projects" class="nav-link">Projects</a>
+      <a href="#mission" class="nav-link">Mission</a>
+      <a href="#team" class="nav-link">Team</a>
+      <a href="https://github.com/secvulnhub/secvulnhub/" target="_blank" class="nav-link">GitHub</a>
+      <a href="https://discord.gg/SecVulnHub" target="_blank" class="nav-cta">Join Discord</a>
+    </div>
+  </div>
+</nav>
+
+<!-- ── HERO ── -->
+<section class="hero">
+  <div class="hero-badge">Arsenal Status: Active Build</div>
+  <p class="hero-pre">Est. 2025 · Open Source</p>
+  <h1 class="hero-title">
+    Forge the<br>
+    Future of <em>Ethical</em><br>
+    Security
+  </h1>
+  <p class="hero-sub">
+    A collective of cybersecurity practitioners building battle-tested tools for the security community. Open source. No gatekeeping. Code that matters.
+  </p>
+  <div class="hero-actions">
+    <a href="https://github.com/secvulnhub/secvulnhub/" target="_blank" class="btn btn-primary">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M12 0C5.374 0 0 5.373 0 12c0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23A11.509 11.509 0 0112 5.803c1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576C20.566 21.797 24 17.3 24 12c0-6.627-5.373-12-12-12z"/></svg>
+      View on GitHub
+    </a>
+    <a href="https://discord.gg/SecVulnHub" target="_blank" class="btn btn-discord">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M20.317 4.37a19.791 19.791 0 00-4.885-1.515.074.074 0 00-.079.037c-.21.375-.444.864-.608 1.25a18.27 18.27 0 00-5.487 0 12.64 12.64 0 00-.617-1.25.077.077 0 00-.079-.037A19.736 19.736 0 003.677 4.37a.07.07 0 00-.032.027C.533 9.046-.32 13.58.099 18.057a.082.082 0 00.031.057 19.9 19.9 0 005.993 3.03.078.078 0 00.084-.028c.462-.63.874-1.295 1.226-1.994a.076.076 0 00-.041-.106 13.107 13.107 0 01-1.872-.892.077.077 0 01-.008-.128 10.2 10.2 0 00.372-.292.074.074 0 01.077-.01c3.928 1.793 8.18 1.793 12.062 0a.074.074 0 01.078.01c.12.098.246.198.373.292a.077.077 0 01-.006.127 12.299 12.299 0 01-1.873.892.077.077 0 00-.041.107c.36.698.772 1.362 1.225 1.993a.076.076 0 00.084.028 19.839 19.839 0 006.002-3.03.077.077 0 00.032-.054c.5-5.177-.838-9.674-3.549-13.66a.061.061 0 00-.031-.03z"/></svg>
+      Join Discord
+    </a>
+  </div>
+  <div class="hero-stats">
+    <div class="hero-stat">
+      <span class="hero-stat-val crim">100</span>
+      <span class="hero-stat-lbl">Day Gauntlet</span>
+    </div>
+    <div class="hero-stat">
+      <span class="hero-stat-val cyan">20+</span>
+      <span class="hero-stat-lbl">Tools Incoming</span>
+    </div>
+    <div class="hero-stat">
+      <span class="hero-stat-val lime">8</span>
+      <span class="hero-stat-lbl">Domains</span>
+    </div>
+    <div class="hero-stat">
+      <span class="hero-stat-val" style="color:#8264ff">MIT</span>
+      <span class="hero-stat-lbl">Licensed</span>
+    </div>
+  </div>
+</section>
+
+<!-- ── PHASE STRIP ── -->
+<div class="phase-strip">
+  <div class="phase-scroll" id="phaseScroll">
+    <div class="phase-item"><span>Phase 1</span> Recon & Intel</div>
+    <div class="phase-item"><span>Phase 2</span> Vulnerability Detection</div>
+    <div class="phase-item"><span>Phase 3</span> Exploitation</div>
+    <div class="phase-item"><span>Phase 4</span> Automation</div>
+    <div class="phase-item"><span>Phase 5</span> Forensics & Analysis</div>
+    <div class="phase-item"><span>Active</span> SecV Toolkit</div>
+    <div class="phase-item"><span>100 Days</span> 20 Tools</div>
+    <div class="phase-item"><span>Open Source</span> MIT</div>
+    <!-- Duplicated for seamless scroll -->
+    <div class="phase-item"><span>Phase 1</span> Recon & Intel</div>
+    <div class="phase-item"><span>Phase 2</span> Vulnerability Detection</div>
+    <div class="phase-item"><span>Phase 3</span> Exploitation</div>
+    <div class="phase-item"><span>Phase 4</span> Automation</div>
+    <div class="phase-item"><span>Phase 5</span> Forensics & Analysis</div>
+    <div class="phase-item"><span>Active</span> SecV Toolkit</div>
+    <div class="phase-item"><span>100 Days</span> 20 Tools</div>
+    <div class="phase-item"><span>Open Source</span> MIT</div>
+  </div>
+</div>
+
+<!-- ── PROJECTS ── -->
+<section id="projects">
+  <div class="section-inner">
+    <div class="projects-header">
+      <div>
+        <p class="section-tag">The Arsenal</p>
+        <h2 class="section-title">Security Tools</h2>
+        <p class="section-sub" style="margin-top:.5rem;">Battle-tested tools from practitioners who live and breathe offensive security.</p>
+      </div>
+      <div style="display:flex;gap:.8rem;flex-wrap:wrap;align-items:center;">
+        <button class="shuffle-btn" id="shuffleBtn" onclick="shuffleProjects()">
+          <span class="shuffle-icon" id="shuffleIcon">⟳</span> Shuffle Projects
+        </button>
+        <a href="https://discord.gg/SecVulnHub" target="_blank" class="btn btn-discord" style="padding:.6rem 1.4rem;">
+          View All Projects
+        </a>
+      </div>
+    </div>
+    <div class="project-grid" id="projectGrid"></div>
+  </div>
+</section>
+
+<div class="divider"></div>
+
+<!-- ── MISSION ── -->
+<section id="mission">
+  <div class="section-inner">
+    <div style="display:grid; grid-template-columns:1fr 1fr; gap:4rem; align-items:center;">
+      <div>
+        <p class="section-tag">Why We Exist</p>
+        <h2 class="section-title">Built by hunters, for hunters.</h2>
+        <p class="section-sub" style="margin-top:1rem;">
+          Every framework ships with bloat. Every security tool has three layers of abstraction that do nothing except look impressive. SecVulnHub exists to ship clean, purposeful tools that practitioners actually reach for.
+        </p>
+        <p class="section-sub" style="margin-top:1rem;">
+          Quality over quantity. Tested in the field. Maintained by the community. If it doesn't solve a real problem, it doesn't ship.
+        </p>
+      </div>
+      <div style="display:grid; grid-template-columns:1fr 1fr; gap:.8rem;">
+        <div style="background:var(--bg-card);border:1px solid var(--border);border-radius:var(--r-lg);padding:1.5rem;">
+          <div style="font-family:'Syne',sans-serif;font-weight:800;font-size:1.6rem;color:var(--crim);">01</div>
+          <div style="font-size:.75rem;color:#fff;font-weight:700;margin:.4rem 0 .3rem;">Quality First</div>
+          <div style="font-size:.65rem;color:var(--fg-muted);line-height:1.7;">Real-world testing before every release. No vaporware.</div>
+        </div>
+        <div style="background:var(--bg-card);border:1px solid var(--border);border-radius:var(--r-lg);padding:1.5rem;">
+          <div style="font-family:'Syne',sans-serif;font-weight:800;font-size:1.6rem;color:var(--cyan);">02</div>
+          <div style="font-size:.75rem;color:#fff;font-weight:700;margin:.4rem 0 .3rem;">Any Language</div>
+          <div style="font-size:.65rem;color:var(--fg-muted);line-height:1.7;">Python, Go, Bash, Rust. Write what you know.</div>
+        </div>
+        <div style="background:var(--bg-card);border:1px solid var(--border);border-radius:var(--r-lg);padding:1.5rem;">
+          <div style="font-family:'Syne',sans-serif;font-weight:800;font-size:1.6rem;color:var(--lime);">03</div>
+          <div style="font-size:.75rem;color:#fff;font-weight:700;margin:.4rem 0 .3rem;">Open Source</div>
+          <div style="font-size:.65rem;color:var(--fg-muted);line-height:1.7;">MIT license. Fork it. Improve it. Ship it back.</div>
+        </div>
+        <div style="background:var(--bg-card);border:1px solid var(--border);border-radius:var(--r-lg);padding:1.5rem;">
+          <div style="font-family:'Syne',sans-serif;font-weight:800;font-size:1.6rem;color:#8264ff;">04</div>
+          <div style="font-size:.75rem;color:#fff;font-weight:700;margin:.4rem 0 .3rem;">Ethical Only</div>
+          <div style="font-size:.65rem;color:var(--fg-muted);line-height:1.7;">Authorized testing only. Always. No exceptions.</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<div class="divider"></div>
+
+<!-- ── TEAM ── -->
+<section id="team">
+  <div class="section-inner">
+    <p class="section-tag">The Collective</p>
+    <h2 class="section-title">Meet the Team</h2>
+    <p class="section-sub">
+      A distributed crew of security obsessives. Red teamers, bug bounty hunters, vulnerability researchers, and tool developers — building things that matter.
+    </p>
+    <div class="team-grid">
+      <div class="team-card">
+        <div class="team-role">Offensive Ops</div>
+        <div class="team-title">Red Team</div>
+        <div class="team-desc">Advanced penetration testing, red team operations, and attack simulation. The ones testing defenses before attackers do.</div>
+      </div>
+      <div class="team-card">
+        <div class="team-role">Bug Bounty</div>
+        <div class="team-title">Active Hunters</div>
+        <div class="team-desc">Active on HackerOne and Bugcrowd. Critical CVE disclosures. Finding what others miss.</div>
+      </div>
+      <div class="team-card">
+        <div class="team-role">Vulnerability Research</div>
+        <div class="team-title">0day Discovery</div>
+        <div class="team-desc">Novel attack vectors, responsible disclosure, and vulnerability research that shapes the field.</div>
+      </div>
+      <div class="team-card">
+        <div class="team-role">Tool Development</div>
+        <div class="team-title">Toolsmiths</div>
+        <div class="team-desc">Full-stack security tooling. Automation, workflow integration, and the frameworks that tie it all together.</div>
+      </div>
+    </div>
+    <div class="team-cta-row">
+      <a href="https://discord.gg/SecVulnHub" target="_blank" class="btn btn-primary">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M20.317 4.37a19.791 19.791 0 00-4.885-1.515.074.074 0 00-.079.037c-.21.375-.444.864-.608 1.25a18.27 18.27 0 00-5.487 0 12.64 12.64 0 00-.617-1.25.077.077 0 00-.079-.037A19.736 19.736 0 003.677 4.37a.07.07 0 00-.032.027C.533 9.046-.32 13.58.099 18.057a.082.082 0 00.031.057 19.9 19.9 0 005.993 3.03.078.078 0 00.084-.028c.462-.63.874-1.295 1.226-1.994a.076.076 0 00-.041-.106 13.107 13.107 0 01-1.872-.892.077.077 0 01-.008-.128 10.2 10.2 0 00.372-.292.074.074 0 01.077-.01c3.928 1.793 8.18 1.793 12.062 0a.074.074 0 01.078.01c.12.098.246.198.373.292a.077.077 0 01-.006.127 12.299 12.299 0 01-1.873.892.077.077 0 00-.041.107c.36.698.772 1.362 1.225 1.993a.076.076 0 00.084.028 19.839 19.839 0 006.002-3.03.077.077 0 00.032-.054c.5-5.177-.838-9.674-3.549-13.66a.061.061 0 00-.031-.03z"/></svg>
+        Meet the Team on Discord
+      </a>
+      <p style="font-size:.68rem;color:var(--fg-dim);">Join our Discord to connect with contributors and the core team.</p>
+    </div>
+  </div>
+</section>
+
+<div class="divider"></div>
+
+<!-- ── CONTRIBUTE ── -->
+<section id="contribute">
+  <div class="section-inner">
+    <div style="text-align:center;max-width:600px;margin:0 auto;">
+      <p class="section-tag">Contribute</p>
+      <h2 class="section-title" style="margin:0 auto 1rem;">Become a<br>Weaponsmith</h2>
+      <p style="font-size:.8rem;color:var(--fg-muted);line-height:1.8;margin-bottom:2rem;">
+        We're looking for contributors who share our obsession with building tools that matter. Your language. Your specialization. Our arsenal.
+      </p>
+      <div style="background:var(--bg-card);border:1px solid var(--border);border-radius:var(--r-lg);padding:1.5rem;text-align:left;margin-bottom:2rem;">
+        <div style="font-size:.6rem;font-weight:700;letter-spacing:.15em;text-transform:uppercase;color:var(--fg-dim);margin-bottom:.8rem;">Submission Checklist</div>
+        <div style="display:flex;flex-direction:column;gap:.5rem;">
+          <div style="font-size:.7rem;color:var(--fg-muted);display:flex;align-items:flex-start;gap:.6rem;"><span style="color:var(--lime);flex-shrink:0;">✓</span> Solves a real cybersecurity challenge</div>
+          <div style="font-size:.7rem;color:var(--fg-muted);display:flex;align-items:flex-start;gap:.6rem;"><span style="color:var(--lime);flex-shrink:0;">✓</span> 5-minute deployment from docs</div>
+          <div style="font-size:.7rem;color:var(--fg-muted);display:flex;align-items:flex-start;gap:.6rem;"><span style="color:var(--lime);flex-shrink:0;">✓</span> Passes security review</div>
+          <div style="font-size:.7rem;color:var(--fg-muted);display:flex;align-items:flex-start;gap:.6rem;"><span style="color:var(--lime);flex-shrink:0;">✓</span> Comprehensive tests and docs</div>
+          <div style="font-size:.7rem;color:var(--fg-muted);display:flex;align-items:flex-start;gap:.6rem;"><span style="color:var(--lime);flex-shrink:0;">✓</span> Adds unique value to the arsenal</div>
+        </div>
+      </div>
+      <div style="display:flex;gap:1rem;justify-content:center;flex-wrap:wrap;">
+        <a href="https://github.com/secvulnhub/secvulnhub/" target="_blank" class="btn btn-primary">Fork on GitHub</a>
+        <a href="https://discord.gg/SecVulnHub" target="_blank" class="btn btn-discord">Ask in Discord</a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ── FOOTER ── -->
+<footer>
+  <div class="footer-inner">
+    <div class="footer-logo">Sec<span>Vuln</span>Hub</div>
+    <div class="footer-links">
+      <a href="https://github.com/secvulnhub/secvulnhub/" target="_blank" class="footer-link">GitHub</a>
+      <a href="https://discord.gg/SecVulnHub" target="_blank" class="footer-link">Discord</a>
+      <a href="Documentations/secv.html" class="footer-link">SecV Docs</a>
+    </div>
+    <div class="footer-note">MIT License · Made by hackers, for hackers.</div>
+  </div>
+</footer>
+
+<script>
+const PROJECTS = [
+  // Active
+  { name:'SecV',            cat:'active',   catLabel:'Active · v2.3.1', desc:'Compiled Go shell that loads security modules written in any language. The core framework powering the arsenal.', status:'active', accent:'#ff2d55' },
+  // Recon
+  { name:'Port Scanner Plus', cat:'recon',  catLabel:'Recon',     desc:'Advanced port enumeration with multi-engine scanning and service fingerprinting.',          status:'ready',  accent:'#00e5ff' },
+  { name:'Subdomain Hunter',  cat:'recon',  catLabel:'Recon',     desc:'Comprehensive subdomain discovery and validation with multiple resolution strategies.',       status:'ready',  accent:'#00e5ff' },
+  { name:'DNS Enum Suite',    cat:'recon',  catLabel:'Recon',     desc:'Deep DNS analysis with zone transfer detection and record enumeration.',                      status:'dev',    accent:'#00e5ff' },
+  { name:'OSINT Gatherer',    cat:'recon',  catLabel:'Recon',     desc:'Automated open-source intelligence collection — people, domains, and infrastructure.',       status:'ready',  accent:'#00e5ff' },
+  { name:'Network Mapper',    cat:'network',catLabel:'Network',   desc:'Advanced network topology discovery with host profiling and CVE correlation.',                status:'dev',    accent:'#8264ff' },
+  // Vuln
+  { name:'Web Fuzzer Pro',    cat:'web',    catLabel:'Web App',   desc:'Intelligent fuzzing with adaptive payload optimization for web applications.',               status:'ready',  accent:'#ff2d55' },
+  { name:'Config Auditor',    cat:'web',    catLabel:'Web App',   desc:'Systematic configuration security analysis across web stacks and frameworks.',               status:'ready',  accent:'#ff2d55' },
+  { name:'SSL/TLS Scanner',   cat:'web',    catLabel:'Web App',   desc:'Comprehensive certificate and protocol testing — ciphers, chain validation, known issues.', status:'ready',  accent:'#ff2d55' },
+  { name:'CMS Vuln Scanner',  cat:'web',    catLabel:'Web App',   desc:'Specialized security testing for WordPress, Joomla, Drupal and other CMS platforms.',       status:'dev',    accent:'#ff2d55' },
+  { name:'API Security Tester',cat:'web',   catLabel:'Web App',   desc:'REST and GraphQL API security validation — auth, injection, rate limiting.',                status:'plan',   accent:'#ff2d55' },
+  // Web attacks
+  { name:'XSS Payload Gen',   cat:'exploit',catLabel:'Exploitation', desc:'Context-aware cross-site scripting payload generation for modern defenses.',              status:'ready',  accent:'#ffa01e' },
+  { name:'SQL Injection Tester',cat:'exploit',catLabel:'Exploitation',desc:'Advanced database injection with time-based, blind, and error-based techniques.',         status:'ready',  accent:'#ffa01e' },
+  { name:'CSRF Token Analyzer',cat:'exploit',catLabel:'Exploitation',desc:'Cross-site request forgery analysis and token entropy validation.',                        status:'dev',    accent:'#ffa01e' },
+  { name:'Payload Generators', cat:'exploit',catLabel:'Exploitation',desc:'Custom payload creation for multiple attack vectors with encoding support.',               status:'ready',  accent:'#ffa01e' },
+  { name:'Reverse Shell Kit',  cat:'exploit',catLabel:'Exploitation',desc:'Multi-platform reverse connection utilities with obfuscation options.',                    status:'ready',  accent:'#ffa01e' },
+  { name:'PrivEsc Checker',    cat:'exploit',catLabel:'Exploitation',desc:'Automated privilege escalation enumeration for Linux and Windows systems.',                status:'dev',    accent:'#ffa01e' },
+  // Mobile
+  { name:'APK Analyzer',      cat:'mobile', catLabel:'Mobile',   desc:'Comprehensive Android app security testing — manifest, permissions, CVE checks, secret scan.',status:'plan',   accent:'#b4ff39' },
+  { name:'iOS Security Tester',cat:'mobile',catLabel:'Mobile',   desc:'iPhone application vulnerability assessment via libimobiledevice. No Mac required.',         status:'plan',   accent:'#b4ff39' },
+  // Forensics
+  { name:'Log Analyzer',      cat:'forensic',catLabel:'Forensics',desc:'Intelligent log parsing with anomaly detection and pattern correlation.',                    status:'dev',    accent:'#28c878' },
+  { name:'Traffic Analyzer',  cat:'forensic',catLabel:'Forensics',desc:'Deep packet inspection and protocol analysis for network forensics.',                        status:'dev',    accent:'#28c878' },
+  // Misc
+  { name:'Hash Cracker',      cat:'misc',   catLabel:'Utilities', desc:'Multi-algorithm hash cracking with wordlist and rule-based attack modes.',                   status:'ready',  accent:'#aaa'    },
+  { name:'Encoding Decoder',  cat:'misc',   catLabel:'Utilities', desc:'Universal encoding and decoding toolkit — Base64, URL, hex, HTML, and more.',               status:'ready',  accent:'#aaa'    },
+  { name:'Report Generator',  cat:'auto',   catLabel:'Automation',desc:'Automated security assessment report generation with customizable templates.',               status:'ready',  accent:'#ffc800' },
+];
+
+const STATUS_MAP = {
+  active: ['status-active','● ACTIVE'],
+  ready:  ['status-ready', '● READY'],
+  dev:    ['status-dev',   '○ IN DEV'],
+  plan:   ['status-plan',  '· PLANNED'],
+};
+const CAT_CLASS = {
+  recon:'cat-recon', web:'cat-web', mobile:'cat-mobile',
+  exploit:'cat-exploit', network:'cat-network', forensic:'cat-forensic',
+  auto:'cat-auto', misc:'cat-misc', active:'cat-active',
+};
+
+let currentProjects = [];
+
+function shuffle(arr) {
+  const a = [...arr];
+  for (let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]];}
+  return a;
+}
+
+function renderCards(cards) {
+  const grid = document.getElementById('projectGrid');
+  // Exit animation
+  Array.from(grid.children).forEach(c => {
+    c.classList.remove('entering');
+    c.classList.add('exiting');
+  });
+  setTimeout(() => {
+    grid.innerHTML = '';
+    cards.forEach((p, i) => {
+      const [statusClass, statusText] = STATUS_MAP[p.status];
+      const card = document.createElement('div');
+      card.className = 'project-card entering';
+      card.style.setProperty('--card-accent', p.accent);
+      card.style.animationDelay = (i * 40) + 'ms';
+      card.innerHTML = `
+        <span class="card-cat ${CAT_CLASS[p.cat]}">${p.catLabel}</span>
+        <div class="card-name">${p.name}</div>
+        <div class="card-desc">${p.desc}</div>
+        <div class="card-status ${statusClass}">
+          <span class="status-dot"></span>${statusText}
+        </div>`;
+      grid.appendChild(card);
+    });
+  }, 200);
+}
+
+function shuffleProjects() {
+  const btn = document.getElementById('shuffleBtn');
+  const icon = document.getElementById('shuffleIcon');
+  btn.classList.add('spinning');
+  icon.classList.add('spinning');
+  setTimeout(() => {
+    btn.classList.remove('spinning');
+    icon.classList.remove('spinning');
+  }, 400);
+  // Show 8 shuffled
+  const shuffled = shuffle(PROJECTS);
+  // Always keep SecV first if it's in the selection
+  const secv = shuffled.find(p => p.name === 'SecV');
+  const rest = shuffled.filter(p => p.name !== 'SecV').slice(0, 7);
+  currentProjects = secv ? [secv, ...rest] : shuffled.slice(0, 8);
+  renderCards(currentProjects);
+}
+
+// Init with SecV + 7 others
+(function init() {
+  const rest = shuffle(PROJECTS.filter(p => p.name !== 'SecV')).slice(0, 7);
+  currentProjects = [PROJECTS[0], ...rest];
+  renderCards(currentProjects);
+})();
+</script>
+</body>
+</html>
