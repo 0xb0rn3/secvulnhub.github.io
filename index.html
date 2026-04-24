@@ -1,0 +1,1000 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>SecVulnHub — Ethical Hacking Arsenal</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@300;400;500;600&family=IBM+Plex+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg: #080910;
+  --bg1: #0d0f18;
+  --bg2: #12141f;
+  --fg: #c8cdd8;
+  --fg2: #7a8299;
+  --fg3: #3d4258;
+  --red: #e8334a;
+  --red2: #ff4d63;
+  --cyan: #1de9b6;
+  --amber: #f59e0b;
+  --border: rgba(255,255,255,0.06);
+  --border2: rgba(255,255,255,0.12);
+}
+
+*,*::before,*::after{margin:0;padding:0;box-sizing:border-box;}
+html{scroll-behavior:smooth;}
+
+body{
+  font-family:'IBM Plex Sans',sans-serif;
+  background:var(--bg);
+  color:var(--fg);
+  overflow-x:hidden;
+  line-height:1.6;
+}
+
+/* ── GLOBE CANVAS ── */
+#globe-canvas{
+  position:fixed;
+  top:0;right:0;
+  width:55vw;height:100vh;
+  z-index:0;
+  opacity:0.55;
+  pointer-events:none;
+}
+
+/* ── NAV ── */
+nav{
+  position:fixed;top:0;left:0;right:0;z-index:100;
+  display:flex;align-items:center;justify-content:space-between;
+  padding:0 3rem;height:56px;
+  background:rgba(8,9,16,0.9);
+  backdrop-filter:blur(12px);
+  border-bottom:1px solid var(--border);
+}
+.nav-logo{
+  font-family:'IBM Plex Mono',monospace;
+  font-size:0.85rem;font-weight:600;
+  color:var(--fg);text-decoration:none;
+  letter-spacing:0.08em;
+  display:flex;align-items:center;gap:0.5rem;
+}
+.nav-logo::before{
+  content:'';display:block;
+  width:8px;height:8px;border-radius:50%;
+  background:var(--red);
+  box-shadow:0 0 8px var(--red);
+  animation:blink 2s step-end infinite;
+}
+@keyframes blink{0%,100%{opacity:1}50%{opacity:0.3}}
+
+.nav-links{display:flex;align-items:center;gap:0.25rem;}
+.nav-link{
+  font-family:'IBM Plex Mono',monospace;
+  font-size:0.65rem;font-weight:400;
+  letter-spacing:0.1em;text-transform:uppercase;
+  color:var(--fg2);text-decoration:none;
+  padding:0.4rem 0.9rem;
+  border:1px solid transparent;
+  border-radius:3px;
+  transition:all 0.15s;
+}
+.nav-link:hover{color:var(--fg);border-color:var(--border2);}
+.nav-cta{
+  font-family:'IBM Plex Mono',monospace;
+  font-size:0.65rem;font-weight:500;
+  letter-spacing:0.1em;text-transform:uppercase;
+  color:var(--bg);background:var(--red);
+  text-decoration:none;padding:0.4rem 1rem;
+  border-radius:3px;border:1px solid var(--red);
+  transition:all 0.15s;
+}
+.nav-cta:hover{background:transparent;color:var(--red);}
+
+/* ── HERO ── */
+.hero{
+  position:relative;z-index:10;
+  min-height:100vh;
+  display:flex;flex-direction:column;justify-content:center;
+  padding:8rem 3rem 6rem;
+  max-width:680px;
+}
+.hero-eyebrow{
+  font-family:'IBM Plex Mono',monospace;
+  font-size:0.65rem;font-weight:400;
+  letter-spacing:0.18em;text-transform:uppercase;
+  color:var(--red);margin-bottom:1.5rem;
+  display:flex;align-items:center;gap:0.8rem;
+}
+.hero-eyebrow::before{content:'//';color:var(--fg3);}
+
+h1{
+  font-family:'IBM Plex Sans',sans-serif;
+  font-size:clamp(2.4rem,5vw,4.2rem);
+  font-weight:300;line-height:1.08;
+  letter-spacing:-0.02em;
+  color:#fff;margin-bottom:1.8rem;
+}
+h1 strong{font-weight:600;color:var(--red);}
+
+.hero-sub{
+  font-size:0.9rem;color:var(--fg2);
+  max-width:480px;line-height:1.75;
+  margin-bottom:2.5rem;
+}
+.hero-actions{display:flex;gap:0.75rem;flex-wrap:wrap;margin-bottom:4rem;}
+
+.btn{
+  display:inline-flex;align-items:center;gap:0.5rem;
+  font-family:'IBM Plex Mono',monospace;
+  font-size:0.65rem;font-weight:500;
+  letter-spacing:0.1em;text-transform:uppercase;
+  padding:0.65rem 1.5rem;border-radius:3px;
+  text-decoration:none;cursor:pointer;
+  border:1px solid;transition:all 0.15s;
+}
+.btn-primary{background:var(--red);border-color:var(--red);color:#fff;}
+.btn-primary:hover{background:transparent;color:var(--red);}
+.btn-ghost{background:transparent;border-color:var(--border2);color:var(--fg2);}
+.btn-ghost:hover{border-color:var(--fg2);color:var(--fg);}
+.btn-discord{background:transparent;border-color:rgba(88,101,242,0.4);color:#7289da;}
+.btn-discord:hover{border-color:#5865f2;background:rgba(88,101,242,0.08);color:#fff;}
+
+.hero-metrics{
+  display:flex;gap:3rem;flex-wrap:wrap;
+  padding-top:2rem;
+  border-top:1px solid var(--border);
+}
+.metric{}
+.metric-val{
+  font-family:'IBM Plex Mono',monospace;
+  font-size:1.6rem;font-weight:600;
+  color:#fff;display:block;line-height:1;
+}
+.metric-val.r{color:var(--red);}
+.metric-val.c{color:var(--cyan);}
+.metric-val.a{color:var(--amber);}
+.metric-lbl{font-size:0.6rem;color:var(--fg3);letter-spacing:0.12em;text-transform:uppercase;margin-top:0.3rem;}
+
+/* ── SCROLL TICKER ── */
+.ticker{
+  position:relative;z-index:10;
+  border-top:1px solid var(--border);
+  border-bottom:1px solid var(--border);
+  overflow:hidden;height:36px;
+  background:var(--bg1);
+}
+.ticker-track{
+  display:flex;width:max-content;
+  animation:tick 40s linear infinite;
+  height:100%;align-items:center;
+}
+.ticker-item{
+  font-family:'IBM Plex Mono',monospace;
+  font-size:0.6rem;font-weight:400;
+  letter-spacing:0.12em;text-transform:uppercase;
+  color:var(--fg3);white-space:nowrap;
+  padding:0 2rem;
+  border-right:1px solid var(--border);
+  height:100%;display:flex;align-items:center;gap:0.6rem;
+}
+.ticker-item span{color:var(--red);}
+@keyframes tick{from{transform:translateX(0)}to{transform:translateX(-50%)}}
+
+/* ── SECTIONS ── */
+section{position:relative;z-index:10;}
+.inner{max-width:1160px;margin:0 auto;padding:5rem 3rem;}
+.section-label{
+  font-family:'IBM Plex Mono',monospace;
+  font-size:0.6rem;font-weight:500;
+  letter-spacing:0.2em;text-transform:uppercase;
+  color:var(--red);margin-bottom:0.5rem;
+}
+h2{
+  font-family:'IBM Plex Sans',sans-serif;
+  font-size:clamp(1.6rem,3vw,2.4rem);
+  font-weight:300;letter-spacing:-0.015em;
+  color:#fff;line-height:1.1;margin-bottom:0.75rem;
+}
+h2 strong{font-weight:600;}
+.section-sub{
+  font-size:0.82rem;color:var(--fg2);
+  max-width:480px;line-height:1.75;
+}
+
+/* ── PROJECTS ── */
+.projects-bar{
+  display:flex;align-items:center;justify-content:space-between;
+  flex-wrap:wrap;gap:1rem;margin-bottom:2rem;
+}
+.projects-bar-right{display:flex;gap:0.5rem;align-items:center;}
+
+.shuffle-btn{
+  font-family:'IBM Plex Mono',monospace;
+  font-size:0.6rem;font-weight:500;
+  letter-spacing:0.1em;text-transform:uppercase;
+  padding:0.5rem 1rem;border-radius:3px;
+  border:1px solid var(--border2);color:var(--fg2);
+  background:var(--bg1);cursor:pointer;
+  transition:all 0.15s;display:flex;align-items:center;gap:0.5rem;
+}
+.shuffle-btn:hover{border-color:var(--cyan);color:var(--cyan);}
+.shuffle-btn.spin .spin-icon{animation:rot 0.35s ease;}
+@keyframes rot{from{transform:rotate(0)}to{transform:rotate(360deg)}}
+.spin-icon{display:inline-block;font-style:normal;}
+
+/* docs dropdown */
+.docs-wrap{position:relative;}
+.docs-btn{cursor:pointer;}
+.docs-menu{
+  position:absolute;top:calc(100% + 6px);right:0;
+  background:var(--bg2);border:1px solid var(--border2);
+  border-radius:4px;min-width:200px;
+  opacity:0;visibility:hidden;transform:translateY(-4px);
+  transition:all 0.15s;z-index:200;overflow:hidden;
+}
+.docs-wrap:hover .docs-menu,
+.docs-wrap:focus-within .docs-menu{
+  opacity:1;visibility:visible;transform:none;
+}
+.docs-item{
+  display:block;padding:0.6rem 1rem;
+  font-family:'IBM Plex Mono',monospace;
+  font-size:0.62rem;letter-spacing:0.08em;text-transform:uppercase;
+  color:var(--fg2);text-decoration:none;cursor:pointer;
+  border:none;background:none;width:100%;text-align:left;
+  border-bottom:1px solid var(--border);transition:all 0.12s;
+}
+.docs-item:last-child{border-bottom:none;}
+.docs-item:hover{background:var(--bg1);color:var(--fg);}
+
+/* project grid */
+.pgrid{
+  display:grid;
+  grid-template-columns:repeat(auto-fill,minmax(280px,1fr));
+  gap:1px;background:var(--border);
+  border:1px solid var(--border);
+}
+.pcard{
+  background:var(--bg);padding:1.5rem;
+  position:relative;overflow:hidden;
+  transition:background 0.2s;cursor:default;
+}
+.pcard::after{
+  content:'';position:absolute;left:0;top:0;width:2px;height:100%;
+  background:var(--card-accent,var(--red));
+  opacity:0;transition:opacity 0.2s;
+}
+.pcard:hover{background:var(--bg1);}
+.pcard:hover::after{opacity:1;}
+.pcard.entering{animation:cin 0.3s ease both;}
+.pcard.exiting{animation:cout 0.2s ease both;}
+@keyframes cin{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}
+@keyframes cout{from{opacity:1}to{opacity:0;transform:translateY(-4px)}}
+
+.pcard-cat{
+  font-family:'IBM Plex Mono',monospace;
+  font-size:0.55rem;font-weight:500;
+  letter-spacing:0.14em;text-transform:uppercase;
+  margin-bottom:0.8rem;display:inline-block;
+  padding:0.2rem 0.5rem;border-radius:2px;
+}
+.cat-active{background:rgba(232,51,74,0.12);color:var(--red);}
+.cat-recon{background:rgba(29,233,182,0.08);color:var(--cyan);}
+.cat-web{background:rgba(232,51,74,0.08);color:#ff8098;}
+.cat-mobile{background:rgba(245,158,11,0.08);color:var(--amber);}
+.cat-exploit{background:rgba(255,120,60,0.08);color:#ff783c;}
+.cat-network{background:rgba(130,100,255,0.08);color:#9370ff;}
+.cat-forensic{background:rgba(40,200,120,0.08);color:#28c878;}
+.cat-auto{background:rgba(245,158,11,0.08);color:var(--amber);}
+.cat-misc{background:rgba(120,130,153,0.08);color:var(--fg2);}
+
+.pcard-name{
+  font-family:'IBM Plex Sans',sans-serif;
+  font-size:0.95rem;font-weight:500;
+  color:#fff;margin-bottom:0.4rem;
+}
+.pcard-desc{font-size:0.72rem;color:var(--fg2);line-height:1.65;}
+.pcard-status{
+  display:inline-flex;align-items:center;gap:0.4rem;
+  font-family:'IBM Plex Mono',monospace;
+  font-size:0.55rem;font-weight:500;letter-spacing:0.1em;text-transform:uppercase;
+  margin-top:1rem;
+}
+.st-active{color:var(--red);}
+.st-ready{color:var(--cyan);}
+.st-dev{color:var(--amber);}
+.st-plan{color:var(--fg3);}
+.st-dot{width:4px;height:4px;border-radius:50%;background:currentColor;}
+.st-active .st-dot{animation:blink 1.5s infinite;}
+
+/* ── MISSION ── */
+.mission-grid{
+  display:grid;grid-template-columns:1fr 1fr;
+  gap:4rem;align-items:start;
+}
+.mission-props{
+  display:grid;grid-template-columns:1fr 1fr;
+  gap:1px;background:var(--border);
+  border:1px solid var(--border);
+  margin-top:0;
+}
+.mprop{
+  padding:1.5rem;background:var(--bg);
+}
+.mprop-num{
+  font-family:'IBM Plex Mono',monospace;
+  font-size:0.75rem;font-weight:500;
+  color:var(--red);letter-spacing:0.08em;
+  display:block;margin-bottom:0.5rem;
+}
+.mprop-title{font-size:0.82rem;font-weight:500;color:#fff;margin-bottom:0.3rem;}
+.mprop-desc{font-size:0.68rem;color:var(--fg2);line-height:1.6;}
+
+/* ── TEAM ── */
+.team-grid{
+  display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));
+  gap:1px;background:var(--border);border:1px solid var(--border);
+  margin-top:2rem;
+}
+.tcard{background:var(--bg);padding:1.5rem;transition:background 0.15s;}
+.tcard:hover{background:var(--bg1);}
+.tcard-role{
+  font-family:'IBM Plex Mono',monospace;
+  font-size:0.55rem;font-weight:500;
+  letter-spacing:0.14em;text-transform:uppercase;
+  color:var(--red);margin-bottom:0.6rem;
+}
+.tcard-name{font-size:0.92rem;font-weight:500;color:#fff;margin-bottom:0.3rem;}
+.tcard-desc{font-size:0.68rem;color:var(--fg2);line-height:1.65;}
+
+/* ── CONTRIBUTE ── */
+.contribute-inner{
+  max-width:640px;margin:0 auto;text-align:center;
+}
+.checklist{
+  text-align:left;margin:1.5rem 0 2rem;
+  background:var(--bg1);border:1px solid var(--border);
+  padding:1.25rem 1.5rem;
+}
+.check-label{
+  font-family:'IBM Plex Mono',monospace;
+  font-size:0.58rem;font-weight:500;
+  letter-spacing:0.15em;text-transform:uppercase;
+  color:var(--fg3);margin-bottom:0.75rem;
+}
+.check-item{
+  display:flex;align-items:flex-start;gap:0.6rem;
+  font-size:0.72rem;color:var(--fg2);
+  padding:0.3rem 0;border-bottom:1px solid var(--border);
+  line-height:1.5;
+}
+.check-item:last-child{border-bottom:none;}
+.check-icon{color:var(--cyan);flex-shrink:0;font-size:0.65rem;margin-top:0.05rem;}
+
+/* ── DOCS MODAL ── */
+.modal-overlay{
+  position:fixed;inset:0;z-index:1000;
+  background:rgba(8,9,16,0.95);
+  display:flex;flex-direction:column;
+  opacity:0;visibility:hidden;transition:all 0.2s;
+}
+.modal-overlay.open{opacity:1;visibility:visible;}
+.modal-header{
+  display:flex;align-items:center;justify-content:space-between;
+  padding:1rem 1.5rem;
+  border-bottom:1px solid var(--border);
+  background:var(--bg1);flex-shrink:0;
+}
+.modal-title{
+  font-family:'IBM Plex Mono',monospace;
+  font-size:0.7rem;font-weight:500;
+  letter-spacing:0.1em;text-transform:uppercase;
+  color:var(--fg);
+}
+.modal-close{
+  background:none;border:1px solid var(--border2);
+  color:var(--fg2);cursor:pointer;
+  font-family:'IBM Plex Mono',monospace;
+  font-size:0.6rem;letter-spacing:0.08em;
+  padding:0.3rem 0.7rem;border-radius:3px;
+  transition:all 0.15s;
+}
+.modal-close:hover{border-color:var(--red);color:var(--red);}
+.modal-body{flex:1;overflow:auto;}
+.modal-body iframe{width:100%;height:100%;border:none;background:#fff;}
+.modal-loading{
+  display:flex;align-items:center;justify-content:center;
+  height:100%;font-family:'IBM Plex Mono',monospace;
+  font-size:0.7rem;color:var(--fg2);letter-spacing:0.1em;
+}
+
+/* ── FOOTER ── */
+footer{
+  position:relative;z-index:10;
+  border-top:1px solid var(--border);
+}
+.footer-inner{
+  max-width:1160px;margin:0 auto;
+  padding:2rem 3rem;
+  display:flex;align-items:center;justify-content:space-between;
+  flex-wrap:wrap;gap:1.5rem;
+}
+.footer-logo{
+  font-family:'IBM Plex Mono',monospace;
+  font-weight:500;font-size:0.8rem;color:var(--fg2);
+}
+.footer-links{display:flex;gap:2rem;flex-wrap:wrap;}
+.footer-link{
+  font-family:'IBM Plex Mono',monospace;
+  font-size:0.6rem;letter-spacing:0.1em;text-transform:uppercase;
+  color:var(--fg3);text-decoration:none;transition:color 0.15s;
+}
+.footer-link:hover{color:var(--fg);}
+.footer-note{
+  font-family:'IBM Plex Mono',monospace;
+  font-size:0.58rem;color:var(--fg3);letter-spacing:0.06em;
+}
+
+/* ── DIVIDER ── */
+.divider{height:1px;background:var(--border);}
+
+/* ── ANIMATIONS ── */
+.fade-in{opacity:0;transform:translateY(16px);animation:fadein 0.7s ease both;}
+@keyframes fadein{to{opacity:1;transform:none}}
+
+@media(max-width:900px){
+  #globe-canvas{width:100vw;height:50vh;top:auto;bottom:0;opacity:0.3;}
+  .hero{padding:7rem 1.5rem 4rem;max-width:none;}
+  .mission-grid{grid-template-columns:1fr;}
+  nav{padding:0 1.5rem;}
+  .inner{padding:4rem 1.5rem;}
+  .nav-links .nav-link:nth-child(n+3){display:none;}
+}
+</style>
+</head>
+<body>
+
+<canvas id="globe-canvas"></canvas>
+
+<!-- NAV -->
+<nav>
+  <a href="#" class="nav-logo">SecVulnHub</a>
+  <div class="nav-links">
+    <a href="#projects" class="nav-link">Projects</a>
+    <a href="#mission" class="nav-link">Mission</a>
+    <a href="#team" class="nav-link">Team</a>
+    <a href="https://github.com/secvulnhub/secvulnhub/" target="_blank" class="nav-link">GitHub</a>
+    <a href="https://discord.gg/SecVulnHub" target="_blank" class="nav-cta">Discord</a>
+  </div>
+</nav>
+
+<!-- HERO -->
+<section class="hero">
+  <div class="hero-eyebrow fade-in">Est. 2025 · Open Source · MIT</div>
+  <h1 class="fade-in" style="animation-delay:0.08s">
+    Forge the<br>
+    Future of <strong>Ethical</strong><br>
+    Security
+  </h1>
+  <p class="hero-sub fade-in" style="animation-delay:0.16s">
+    A collective of cybersecurity practitioners building battle-tested tools for the security community. No gatekeeping. Code that matters.
+  </p>
+  <div class="hero-actions fade-in" style="animation-delay:0.24s">
+    <a href="https://github.com/secvulnhub/secvulnhub/" target="_blank" class="btn btn-primary">
+      <svg width="13" height="13" viewBox="0 0 24 24" fill="currentColor"><path d="M12 0C5.374 0 0 5.373 0 12c0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23A11.509 11.509 0 0112 5.803c1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576C20.566 21.797 24 17.3 24 12c0-6.627-5.373-12-12-12z"/></svg>
+      View on GitHub
+    </a>
+    <a href="https://discord.gg/SecVulnHub" target="_blank" class="btn btn-discord">
+      <svg width="13" height="13" viewBox="0 0 24 24" fill="currentColor"><path d="M20.317 4.37a19.791 19.791 0 00-4.885-1.515.074.074 0 00-.079.037c-.21.375-.444.864-.608 1.25a18.27 18.27 0 00-5.487 0 12.64 12.64 0 00-.617-1.25.077.077 0 00-.079-.037A19.736 19.736 0 003.677 4.37a.07.07 0 00-.032.027C.533 9.046-.32 13.58.099 18.057a.082.082 0 00.031.057 19.9 19.9 0 005.993 3.03.078.078 0 00.084-.028c.462-.63.874-1.295 1.226-1.994a.076.076 0 00-.041-.106 13.107 13.107 0 01-1.872-.892.077.077 0 01-.008-.128 10.2 10.2 0 00.372-.292.074.074 0 01.077-.01c3.928 1.793 8.18 1.793 12.062 0a.074.074 0 01.078.01c.12.098.246.198.373.292a.077.077 0 01-.006.127 12.299 12.299 0 01-1.873.892.077.077 0 00-.041.107c.36.698.772 1.362 1.225 1.993a.076.076 0 00.084.028 19.839 19.839 0 006.002-3.03.077.077 0 00.032-.054c.5-5.177-.838-9.674-3.549-13.66a.061.061 0 00-.031-.03z"/></svg>
+      Join Discord
+    </a>
+  </div>
+  <div class="hero-metrics fade-in" style="animation-delay:0.32s">
+    <div class="metric">
+      <span class="metric-val r">100</span>
+      <span class="metric-lbl">Day Gauntlet</span>
+    </div>
+    <div class="metric">
+      <span class="metric-val c">20+</span>
+      <span class="metric-lbl">Tools Incoming</span>
+    </div>
+    <div class="metric">
+      <span class="metric-val a">8</span>
+      <span class="metric-lbl">Domains</span>
+    </div>
+    <div class="metric">
+      <span class="metric-val" style="color:#9370ff">MIT</span>
+      <span class="metric-lbl">Licensed</span>
+    </div>
+  </div>
+</section>
+
+<!-- TICKER -->
+<div class="ticker">
+  <div class="ticker-track" id="tickerTrack">
+    <div class="ticker-item"><span>Phase 1</span> Recon &amp; Intel</div>
+    <div class="ticker-item"><span>Phase 2</span> Vulnerability Detection</div>
+    <div class="ticker-item"><span>Phase 3</span> Exploitation</div>
+    <div class="ticker-item"><span>Phase 4</span> Automation</div>
+    <div class="ticker-item"><span>Phase 5</span> Forensics &amp; Analysis</div>
+    <div class="ticker-item"><span>Active</span> SecV Toolkit</div>
+    <div class="ticker-item"><span>100 Days</span> 20 Tools</div>
+    <div class="ticker-item"><span>Open Source</span> MIT</div>
+    <div class="ticker-item"><span>Phase 1</span> Recon &amp; Intel</div>
+    <div class="ticker-item"><span>Phase 2</span> Vulnerability Detection</div>
+    <div class="ticker-item"><span>Phase 3</span> Exploitation</div>
+    <div class="ticker-item"><span>Phase 4</span> Automation</div>
+    <div class="ticker-item"><span>Phase 5</span> Forensics &amp; Analysis</div>
+    <div class="ticker-item"><span>Active</span> SecV Toolkit</div>
+    <div class="ticker-item"><span>100 Days</span> 20 Tools</div>
+    <div class="ticker-item"><span>Open Source</span> MIT</div>
+  </div>
+</div>
+
+<!-- PROJECTS -->
+<section id="projects">
+  <div class="inner">
+    <div class="projects-bar">
+      <div>
+        <p class="section-label">The Arsenal</p>
+        <h2><strong>Security</strong> Tools</h2>
+      </div>
+      <div class="projects-bar-right">
+        <button class="shuffle-btn" id="shuffleBtn" onclick="shuffleProjects()">
+          <i class="spin-icon" id="spinIcon">⟳</i> Shuffle
+        </button>
+        <!-- docs dropdown -->
+        <div class="docs-wrap">
+          <button class="btn btn-ghost docs-btn">Documentation ▾</button>
+          <div class="docs-menu">
+            <button class="docs-item" onclick="openDoc('hosted')">SecV Docs (Live)</button>
+            <button class="docs-item" onclick="openDoc('readme')">README (GitHub)</button>
+          </div>
+        </div>
+        <a href="https://discord.gg/SecVulnHub" target="_blank" class="btn btn-discord">All Projects</a>
+      </div>
+    </div>
+    <div class="pgrid" id="projectGrid"></div>
+  </div>
+</section>
+
+<div class="divider"></div>
+
+<!-- MISSION -->
+<section id="mission">
+  <div class="inner">
+    <div class="mission-grid">
+      <div>
+        <p class="section-label">Why We Exist</p>
+        <h2>Built by hunters,<br><strong>for hunters.</strong></h2>
+        <p class="section-sub" style="margin-top:1rem">
+          Every framework ships with bloat. Every security tool has three layers of abstraction that do nothing except look impressive. SecVulnHub exists to ship clean, purposeful tools that practitioners actually reach for.
+        </p>
+        <p class="section-sub" style="margin-top:0.75rem">
+          Quality over quantity. Tested in the field. Maintained by the community. If it doesn't solve a real problem, it doesn't ship.
+        </p>
+      </div>
+      <div class="mission-props">
+        <div class="mprop">
+          <span class="mprop-num">01</span>
+          <div class="mprop-title">Quality First</div>
+          <div class="mprop-desc">Real-world testing before every release. No vaporware, no theory-only code.</div>
+        </div>
+        <div class="mprop">
+          <span class="mprop-num" style="color:var(--cyan)">02</span>
+          <div class="mprop-title">Any Language</div>
+          <div class="mprop-desc">Python, Go, Bash, Rust. Write what performs. Write what you know.</div>
+        </div>
+        <div class="mprop">
+          <span class="mprop-num" style="color:var(--amber)">03</span>
+          <div class="mprop-title">Open Source</div>
+          <div class="mprop-desc">MIT license. Fork it. Improve it. Ship it back. No gatekeeping.</div>
+        </div>
+        <div class="mprop">
+          <span class="mprop-num" style="color:#9370ff">04</span>
+          <div class="mprop-title">Ethical Only</div>
+          <div class="mprop-desc">Authorized testing only. Always. No exceptions. Ever.</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<div class="divider"></div>
+
+<!-- TEAM -->
+<section id="team">
+  <div class="inner">
+    <p class="section-label">The Collective</p>
+    <h2>Meet the <strong>Team</strong></h2>
+    <p class="section-sub">A distributed crew of security obsessives. Red teamers, bug bounty hunters, vulnerability researchers, and tool developers.</p>
+    <div class="team-grid">
+      <div class="tcard">
+        <div class="tcard-role">Offensive Ops</div>
+        <div class="tcard-name">Red Team</div>
+        <div class="tcard-desc">Advanced penetration testing, red team operations, and attack simulation. Testing defenses before attackers do.</div>
+      </div>
+      <div class="tcard">
+        <div class="tcard-role">Bug Bounty</div>
+        <div class="tcard-name">Active Hunters</div>
+        <div class="tcard-desc">Active on HackerOne and Bugcrowd. Critical CVE disclosures. Finding what others miss consistently.</div>
+      </div>
+      <div class="tcard">
+        <div class="tcard-role">Vulnerability Research</div>
+        <div class="tcard-name">0day Discovery</div>
+        <div class="tcard-desc">Novel attack vectors, responsible disclosure, and vulnerability research that shapes the field.</div>
+      </div>
+      <div class="tcard">
+        <div class="tcard-role">Tool Development</div>
+        <div class="tcard-name">Toolsmiths</div>
+        <div class="tcard-desc">Full-stack security tooling. Automation, workflow integration, and frameworks that tie it together.</div>
+      </div>
+    </div>
+    <div style="margin-top:2rem;display:flex;gap:0.75rem;flex-wrap:wrap;align-items:center;">
+      <a href="https://discord.gg/SecVulnHub" target="_blank" class="btn btn-primary">Meet the Team on Discord</a>
+      <span style="font-size:0.7rem;color:var(--fg3)">Connect with contributors and the core team.</span>
+    </div>
+  </div>
+</section>
+
+<div class="divider"></div>
+
+<!-- CONTRIBUTE -->
+<section id="contribute">
+  <div class="inner">
+    <div class="contribute-inner">
+      <p class="section-label">Contribute</p>
+      <h2>Become a<br><strong>Weaponsmith</strong></h2>
+      <p style="font-size:0.82rem;color:var(--fg2);line-height:1.75;margin-top:0.75rem">
+        We're looking for contributors who share our obsession with building tools that matter. Your language. Your specialization. Our arsenal.
+      </p>
+      <div class="checklist">
+        <div class="check-label">Submission Checklist</div>
+        <div class="check-item"><span class="check-icon">✓</span> Solves a real cybersecurity challenge</div>
+        <div class="check-item"><span class="check-icon">✓</span> 5-minute deployment from docs</div>
+        <div class="check-item"><span class="check-icon">✓</span> Passes security review</div>
+        <div class="check-item"><span class="check-icon">✓</span> Comprehensive tests and documentation</div>
+        <div class="check-item"><span class="check-icon">✓</span> Adds unique value to the arsenal</div>
+      </div>
+      <div style="display:flex;gap:0.75rem;justify-content:center;flex-wrap:wrap;">
+        <a href="https://github.com/secvulnhub/secvulnhub/" target="_blank" class="btn btn-primary">Fork on GitHub</a>
+        <a href="https://discord.gg/SecVulnHub" target="_blank" class="btn btn-discord">Ask in Discord</a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <div class="footer-inner">
+    <div class="footer-logo">SecVulnHub</div>
+    <div class="footer-links">
+      <a href="https://github.com/secvulnhub/secvulnhub/" target="_blank" class="footer-link">GitHub</a>
+      <a href="https://discord.gg/SecVulnHub" target="_blank" class="footer-link">Discord</a>
+      <button class="footer-link" onclick="openDoc('hosted')" style="background:none;border:none;cursor:pointer;">SecV Docs</button>
+    </div>
+    <div class="footer-note">MIT License · Made by hackers, for hackers.</div>
+  </div>
+</footer>
+
+<!-- DOCS MODAL -->
+<div class="modal-overlay" id="docsModal">
+  <div class="modal-header">
+    <span class="modal-title" id="modalTitle">Documentation</span>
+    <button class="modal-close" onclick="closeDoc()">✕ Close</button>
+  </div>
+  <div class="modal-body" id="modalBody">
+    <div class="modal-loading">Loading documentation...</div>
+  </div>
+</div>
+
+<!-- THREE.JS for globe -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+<script>
+/* ── GLOBE ── */
+(function(){
+  const canvas = document.getElementById('globe-canvas');
+  const renderer = new THREE.WebGLRenderer({canvas, antialias:true, alpha:true});
+  renderer.setPixelRatio(Math.min(devicePixelRatio, 2));
+
+  const scene = new THREE.Scene();
+  const camera = new THREE.PerspectiveCamera(45, 1, 0.1, 1000);
+  camera.position.z = 2.8;
+
+  function resize(){
+    const w = canvas.clientWidth, h = canvas.clientHeight;
+    renderer.setSize(w, h, false);
+    camera.aspect = w/h;
+    camera.updateProjectionMatrix();
+  }
+  resize();
+  new ResizeObserver(resize).observe(canvas);
+
+  /* Earth sphere with texture-like appearance using procedural approach */
+  const geo = new THREE.SphereGeometry(1, 64, 64);
+
+  /* Create canvas texture for earth-like appearance */
+  const texCanvas = document.createElement('canvas');
+  texCanvas.width = 2048; texCanvas.height = 1024;
+  const ctx = texCanvas.getContext('2d');
+
+  /* deep ocean base */
+  ctx.fillStyle = '#051428';
+  ctx.fillRect(0, 0, 2048, 1024);
+
+  /* ocean layers */
+  const grad = ctx.createLinearGradient(0,0,0,1024);
+  grad.addColorStop(0,'rgba(0,30,80,0.8)');
+  grad.addColorStop(0.5,'rgba(0,20,60,0.5)');
+  grad.addColorStop(1,'rgba(0,10,40,0.8)');
+  ctx.fillStyle = grad;
+  ctx.fillRect(0,0,2048,1024);
+
+  /* continent shapes — simplified land masses */
+  ctx.fillStyle = '#0d2a18';
+
+  // North America
+  ctx.beginPath();
+  ctx.ellipse(380,300,160,130,Math.PI*0.1,0,Math.PI*2);
+  ctx.fill();
+  ctx.beginPath();
+  ctx.ellipse(340,420,80,90,Math.PI*0.15,0,Math.PI*2);
+  ctx.fill();
+
+  // South America
+  ctx.beginPath();
+  ctx.ellipse(430,600,70,120,Math.PI*0.05,0,Math.PI*2);
+  ctx.fill();
+
+  // Europe
+  ctx.beginPath();
+  ctx.ellipse(920,250,70,60,0,0,Math.PI*2);
+  ctx.fill();
+
+  // Africa
+  ctx.beginPath();
+  ctx.ellipse(960,480,90,160,0,0,Math.PI*2);
+  ctx.fill();
+
+  // Asia
+  ctx.beginPath();
+  ctx.ellipse(1280,280,280,180,Math.PI*0.05,0,Math.PI*2);
+  ctx.fill();
+
+  // Australia
+  ctx.beginPath();
+  ctx.ellipse(1560,620,100,70,0,0,Math.PI*2);
+  ctx.fill();
+
+  // Antarctica
+  ctx.beginPath();
+  ctx.ellipse(1024,960,400,50,0,0,Math.PI*2);
+  ctx.fillStyle = '#1a2a3a';
+  ctx.fill();
+
+  /* grid lines */
+  ctx.strokeStyle = 'rgba(29,233,182,0.08)';
+  ctx.lineWidth = 1;
+  for(let lat=-80;lat<=80;lat+=20){
+    const y = ((lat+90)/180)*1024;
+    ctx.beginPath();ctx.moveTo(0,y);ctx.lineTo(2048,y);ctx.stroke();
+  }
+  for(let lon=0;lon<360;lon+=20){
+    const x=(lon/360)*2048;
+    ctx.beginPath();ctx.moveTo(x,0);ctx.lineTo(x,1024);ctx.stroke();
+  }
+
+  /* city dots */
+  ctx.fillStyle = 'rgba(232,51,74,0.9)';
+  const cities = [
+    [380,300],[920,250],[1280,280],[1060,350],[1560,620],
+    [430,400],[960,480],[800,320],[1400,260],[500,260]
+  ];
+  cities.forEach(([x,y])=>{
+    ctx.beginPath();ctx.arc(x,y,3,0,Math.PI*2);ctx.fill();
+    ctx.beginPath();ctx.arc(x,y,7,0,Math.PI*2);
+    ctx.fillStyle='rgba(232,51,74,0.15)';ctx.fill();
+    ctx.fillStyle='rgba(232,51,74,0.9)';
+  });
+
+  const texture = new THREE.CanvasTexture(texCanvas);
+
+  const mat = new THREE.MeshPhongMaterial({
+    map: texture,
+    specular: new THREE.Color(0x1de9b6),
+    shininess: 8,
+    transparent: true,
+    opacity: 0.92,
+  });
+
+  const globe = new THREE.Mesh(geo, mat);
+  scene.add(globe);
+
+  /* atmosphere glow */
+  const atmGeo = new THREE.SphereGeometry(1.06, 64, 64);
+  const atmMat = new THREE.MeshPhongMaterial({
+    color: 0x1de9b6,
+    transparent: true,
+    opacity: 0.04,
+    side: THREE.FrontSide,
+  });
+  scene.add(new THREE.Mesh(atmGeo, atmMat));
+
+  /* wireframe overlay */
+  const wireGeo = new THREE.SphereGeometry(1.01, 32, 32);
+  const wireMat = new THREE.MeshBasicMaterial({
+    color: 0x1de9b6,
+    wireframe: true,
+    transparent: true,
+    opacity: 0.04,
+  });
+  scene.add(new THREE.Mesh(wireGeo, wireMat));
+
+  /* lights */
+  const ambLight = new THREE.AmbientLight(0x111122, 0.6);
+  scene.add(ambLight);
+  const dirLight = new THREE.DirectionalLight(0x3366ff, 1.2);
+  dirLight.position.set(-3, 2, 4);
+  scene.add(dirLight);
+  const redLight = new THREE.PointLight(0xe8334a, 0.5, 10);
+  redLight.position.set(3, -1, 2);
+  scene.add(redLight);
+
+  /* position globe right side */
+  globe.position.x = 0.4;
+
+  /* animate */
+  let t = 0;
+  function animate(){
+    requestAnimationFrame(animate);
+    t += 0.003;
+    globe.rotation.y = t;
+    renderer.render(scene, camera);
+  }
+  animate();
+})();
+
+/* ── PROJECTS DATA ── */
+const PROJECTS = [
+  {name:'SecV',cat:'active',catLabel:'Active · v2.3.1',desc:'Compiled Go shell that loads security modules written in any language. The core framework powering the arsenal.',status:'active',accent:'#e8334a'},
+  {name:'Port Scanner Plus',cat:'recon',catLabel:'Recon',desc:'Advanced port enumeration with multi-engine scanning and service fingerprinting.',status:'ready',accent:'#1de9b6'},
+  {name:'Subdomain Hunter',cat:'recon',catLabel:'Recon',desc:'Comprehensive subdomain discovery and validation with multiple resolution strategies.',status:'ready',accent:'#1de9b6'},
+  {name:'DNS Enum Suite',cat:'recon',catLabel:'Recon',desc:'Deep DNS analysis with zone transfer detection and record enumeration.',status:'dev',accent:'#1de9b6'},
+  {name:'OSINT Gatherer',cat:'recon',catLabel:'Recon',desc:'Automated open-source intelligence collection — people, domains, and infrastructure.',status:'ready',accent:'#1de9b6'},
+  {name:'Network Mapper',cat:'network',catLabel:'Network',desc:'Advanced network topology discovery with host profiling and CVE correlation.',status:'dev',accent:'#9370ff'},
+  {name:'Web Fuzzer Pro',cat:'web',catLabel:'Web App',desc:'Intelligent fuzzing with adaptive payload optimization for web applications.',status:'ready',accent:'#ff8098'},
+  {name:'Config Auditor',cat:'web',catLabel:'Web App',desc:'Systematic configuration security analysis across web stacks and frameworks.',status:'ready',accent:'#ff8098'},
+  {name:'SSL/TLS Scanner',cat:'web',catLabel:'Web App',desc:'Comprehensive certificate and protocol testing — ciphers, chain validation, known issues.',status:'ready',accent:'#ff8098'},
+  {name:'CMS Vuln Scanner',cat:'web',catLabel:'Web App',desc:'Specialized security testing for WordPress, Joomla, Drupal and other CMS platforms.',status:'dev',accent:'#ff8098'},
+  {name:'API Security Tester',cat:'web',catLabel:'Web App',desc:'REST and GraphQL API security validation — auth, injection, rate limiting.',status:'plan',accent:'#ff8098'},
+  {name:'XSS Payload Gen',cat:'exploit',catLabel:'Exploitation',desc:'Context-aware cross-site scripting payload generation for modern defenses.',status:'ready',accent:'#ff783c'},
+  {name:'SQL Injection Tester',cat:'exploit',catLabel:'Exploitation',desc:'Advanced database injection with time-based, blind, and error-based techniques.',status:'ready',accent:'#ff783c'},
+  {name:'CSRF Token Analyzer',cat:'exploit',catLabel:'Exploitation',desc:'Cross-site request forgery analysis and token entropy validation.',status:'dev',accent:'#ff783c'},
+  {name:'Payload Generators',cat:'exploit',catLabel:'Exploitation',desc:'Custom payload creation for multiple attack vectors with encoding support.',status:'ready',accent:'#ff783c'},
+  {name:'Reverse Shell Kit',cat:'exploit',catLabel:'Exploitation',desc:'Multi-platform reverse connection utilities with obfuscation options.',status:'ready',accent:'#ff783c'},
+  {name:'PrivEsc Checker',cat:'exploit',catLabel:'Exploitation',desc:'Automated privilege escalation enumeration for Linux and Windows systems.',status:'dev',accent:'#ff783c'},
+  {name:'APK Analyzer',cat:'mobile',catLabel:'Mobile',desc:'Comprehensive Android app security testing — manifest, permissions, CVE checks, secret scan.',status:'plan',accent:'#f59e0b'},
+  {name:'iOS Security Tester',cat:'mobile',catLabel:'Mobile',desc:'iPhone application vulnerability assessment via libimobiledevice. No Mac required.',status:'plan',accent:'#f59e0b'},
+  {name:'Log Analyzer',cat:'forensic',catLabel:'Forensics',desc:'Intelligent log parsing with anomaly detection and pattern correlation.',status:'dev',accent:'#28c878'},
+  {name:'Traffic Analyzer',cat:'forensic',catLabel:'Forensics',desc:'Deep packet inspection and protocol analysis for network forensics.',status:'dev',accent:'#28c878'},
+  {name:'Hash Cracker',cat:'misc',catLabel:'Utilities',desc:'Multi-algorithm hash cracking with wordlist and rule-based attack modes.',status:'ready',accent:'#7a8299'},
+  {name:'Encoding Decoder',cat:'misc',catLabel:'Utilities',desc:'Universal encoding and decoding toolkit — Base64, URL, hex, HTML, and more.',status:'ready',accent:'#7a8299'},
+  {name:'Report Generator',cat:'auto',catLabel:'Automation',desc:'Automated security assessment report generation with customizable templates.',status:'ready',accent:'#f59e0b'},
+];
+
+const STATUS={
+  active:['st-active','● Active'],
+  ready:['st-ready','● Ready'],
+  dev:['st-dev','○ In Dev'],
+  plan:['st-plan','· Planned'],
+};
+
+function shuffle(a){
+  const b=[...a];
+  for(let i=b.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[b[i],b[j]]=[b[j],b[i]];}
+  return b;
+}
+
+function renderCards(cards){
+  const grid=document.getElementById('projectGrid');
+  Array.from(grid.children).forEach(c=>{c.classList.remove('entering');c.classList.add('exiting');});
+  setTimeout(()=>{
+    grid.innerHTML='';
+    cards.forEach((p,i)=>{
+      const [sc,st]=STATUS[p.status];
+      const el=document.createElement('div');
+      el.className='pcard entering';
+      el.style.setProperty('--card-accent',p.accent);
+      el.style.animationDelay=(i*30)+'ms';
+      el.innerHTML=`<span class="pcard-cat cat-${p.cat}">${p.catLabel}</span>
+<div class="pcard-name">${p.name}</div>
+<div class="pcard-desc">${p.desc}</div>
+<div class="pcard-status ${sc}"><span class="st-dot"></span>${st}</div>`;
+      grid.appendChild(el);
+    });
+  },200);
+}
+
+function shuffleProjects(){
+  const btn=document.getElementById('shuffleBtn');
+  const icon=document.getElementById('spinIcon');
+  btn.classList.add('spin');icon.classList.add('spin');
+  setTimeout(()=>{btn.classList.remove('spin');icon.classList.remove('spin');},350);
+  const sh=shuffle(PROJECTS.filter(p=>p.name!=='SecV')).slice(0,7);
+  renderCards([PROJECTS[0],...sh]);
+}
+
+(function init(){
+  const rest=shuffle(PROJECTS.filter(p=>p.name!=='SecV')).slice(0,7);
+  renderCards([PROJECTS[0],...rest]);
+})();
+
+/* ── DOCS MODAL ── */
+const DOC_SOURCES = {
+  hosted: {
+    title: 'SecV Docs — Live',
+    // Fetch raw HTML from the hosted secv.html page via GitHub raw
+    url: 'https://raw.githubusercontent.com/0xb0rn3/0xb0rn3.github.io/main/Blog/secv.html',
+    render: 'html',
+  },
+  readme: {
+    title: 'README — SecVulnHub',
+    url: 'https://raw.githubusercontent.com/secvulnhub/secvulnhub/main/README.md',
+    render: 'md',
+  }
+};
+
+function openDoc(key){
+  const modal=document.getElementById('docsModal');
+  const body=document.getElementById('modalBody');
+  const title=document.getElementById('modalTitle');
+  const src=DOC_SOURCES[key];
+  title.textContent=src.title;
+  modal.classList.add('open');
+  body.innerHTML='<div class="modal-loading">// Fetching documentation...</div>';
+
+  fetch(src.url)
+    .then(r=>{
+      if(!r.ok) throw new Error('Failed to fetch: '+r.status);
+      return r.text();
+    })
+    .then(text=>{
+      if(src.render==='html'){
+        const blob=new Blob([text],{type:'text/html'});
+        const url=URL.createObjectURL(blob);
+        body.innerHTML=`<iframe src="${url}" onload="URL.revokeObjectURL('${url}')"></iframe>`;
+      } else {
+        // render markdown as simple styled text
+        const safe=text
+          .replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;')
+          .replace(/^# (.+)$/gm,'<h1>$1</h1>')
+          .replace(/^## (.+)$/gm,'<h2>$1</h2>')
+          .replace(/^### (.+)$/gm,'<h3>$1</h3>')
+          .replace(/\*\*(.+?)\*\*/g,'<strong>$1</strong>')
+          .replace(/`([^`]+)`/g,'<code>$1</code>')
+          .replace(/\n/g,'<br>');
+        body.innerHTML=`<div style="padding:2rem 3rem;max-width:860px;margin:0 auto;font-family:'IBM Plex Mono',monospace;font-size:0.78rem;line-height:1.7;color:#c8cdd8;background:#080910;min-height:100%">
+          <style>h1{font-size:1.4rem;color:#fff;margin:1.5rem 0 0.5rem}h2{font-size:1rem;color:#e8334a;margin:1.2rem 0 0.4rem}h3{font-size:0.85rem;color:#1de9b6;margin:1rem 0 0.3rem}strong{color:#fff}code{background:#0d0f18;padding:0.1em 0.3em;border-radius:2px;color:#f59e0b}</style>
+          ${safe}
+        </div>`;
+      }
+    })
+    .catch(err=>{
+      body.innerHTML=`<div class="modal-loading" style="flex-direction:column;gap:1rem">
+        <span style="color:#e8334a">// fetch error</span>
+        <span style="font-size:0.65rem;color:#7a8299">${err.message}</span>
+        <a href="${src.url}" target="_blank" style="color:#1de9b6;font-size:0.65rem">Open source directly →</a>
+      </div>`;
+    });
+}
+
+function closeDoc(){
+  document.getElementById('docsModal').classList.remove('open');
+  document.getElementById('modalBody').innerHTML='<div class="modal-loading">Loading documentation...</div>';
+}
+
+document.addEventListener('keydown',e=>{if(e.key==='Escape')closeDoc();});
+</script>
+</body>
+</html>
